@@ -1,0 +1,49 @@
+{
+  "app": {
+    "signingConfigs": [
+      {
+        "name": "default",
+        "type": "HarmonyOS",
+        "material": {
+          "certpath": "/Users/lidong/.ohos/config/auto_debug_TechHarmony_com.zeit.tech_30086000548145040.cer",
+          "storePassword": "0000001B91C0FE63B8ADCECBFEFFDC42D742EAFE80AB638966AC969C62538D48B81FF5261A0982C204FB08",
+          "keyAlias": "debugKey",
+          "keyPassword": "0000001B45422B4344E8F5CB24908A4B1F1409CECAE509A4C0589DA33E2C8FBC2AACC6FEE3371F3A0FE0B2",
+          "profile": "/Users/lidong/.ohos/config/auto_debug_TechHarmony_com.zeit.tech_30086000548145040.p7b",
+          "signAlg": "SHA256withECDSA",
+          "storeFile": "/Users/lidong/.ohos/config/auto_debug_TechHarmony_com.zeit.tech_30086000548145040.p12"
+        }
+      }
+    ],
+    "compileSdkVersion": 9,
+    "compatibleSdkVersion": 9,
+    "products": [
+      {
+        "name": "default",
+        "signingConfig": "default",
+      }
+    ],
+    "buildModeSet": [
+      {
+        "name": "debug",
+      },
+      {
+        "name": "release"
+      }
+    ]
+  },
+  "modules": [
+    {
+      "name": "entry",
+      "srcPath": "./entry",
+      "targets": [
+        {
+          "name": "default",
+          "applyToProducts": [
+            "default"
+          ]
+        }
+      ]
+    }
+  ]
+}
