@@ -1,5 +1,6 @@
 {
   "src": [
-    "pages/SplashPage"
+    "pages/SplashPage",
+    "pages/MainPage"
   ]
 }

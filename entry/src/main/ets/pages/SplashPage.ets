@@ -1,6 +1,8 @@
 /**
  * 启动页
  */
+import router from '@ohos.router';
+import { RoutePath } from '../constants/RoutePath';
 @Entry
 @Component
 struct SplashPage {
@@ -10,6 +12,9 @@ struct SplashPage {
   aboutToAppear() {
     this.intervalID = setInterval(function() {
       this.countDownTimer--;
+      if (this.countDownTimer === 0) {
+        router.pushUrl({url: RoutePath.MAIN_PAGE});
+      }
     }, 1000);
   }
 
