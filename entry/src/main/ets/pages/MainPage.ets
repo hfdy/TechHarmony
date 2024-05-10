@@ -40,14 +40,14 @@ struct MainPage {
   @Builder
   TabBuilder(index: number) {
     Column() {
-      Text(this.tabsArray[index])
-        .fontColor(this.currentIndex === index ? this.selectedFontColor : this.fontColor)
-        .fontSize(16)
-        .fontWeight(this.currentIndex === index ? 500 : 400)
       Image(this.currentIndex === index ? this.tabSelectArray[index] : this.tabNormalArray[index])
         .width(20)
         .height(20)
         .margin({ top: 5 })
+      Text(this.tabsArray[index])
+        .fontColor(this.currentIndex === index ? this.selectedFontColor : this.fontColor)
+        .fontSize(16)
+        .fontWeight(this.currentIndex === index ? 500 : 400)
     }
     .width('100%')
     .align(Alignment.Center)

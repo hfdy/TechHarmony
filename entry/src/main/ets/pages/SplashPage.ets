@@ -10,7 +10,7 @@ struct SplashPage {
   intervalID: number = 5;
 
   aboutToAppear() {
-    this.intervalID = setInterval(function() {
+    this.intervalID = setInterval(()=>{
       this.countDownTimer--;
       if (this.countDownTimer === 0) {
         router.pushUrl({url: RoutePath.MAIN_PAGE});
@@ -20,7 +20,7 @@ struct SplashPage {
 
   build() {
     Stack({alignContent: Alignment.TopStart}){
-      Image($r("app.media.icon"))
+      Image($r("app.media.bg_welcome"))
         .width('100%')
         .height('100%')
         .objectFit(ImageFit.Cover)
