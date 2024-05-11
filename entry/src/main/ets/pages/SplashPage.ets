@@ -7,32 +7,33 @@ import { RoutePath } from '../constants/RoutePath';
 @Component
 struct SplashPage {
   @State countDownTimer: number = 5;
-  intervalID: number = 5;
+  intervalID: number = 0;
 
   aboutToAppear() {
     this.intervalID = setInterval(()=>{
       this.countDownTimer--;
-      if (this.countDownTimer === 0) {
+      if (this.countDownTimer === 1) {
+        clearInterval(this.intervalID);
         router.pushUrl({url: RoutePath.MAIN_PAGE});
       }
     }, 1000);
   }
 
   build() {
-    Stack({alignContent: Alignment.TopStart}){
+    Stack({alignContent: Alignment.TopEnd}){
       Image($r("app.media.bg_welcome"))
         .width('100%')
         .height('100%')
         .objectFit(ImageFit.Cover)
-      Text(`${this.countDownTimer}`)
+      Text(`${this.countDownTimer}s`)
         .fontColor("#fff")
         .fontSize(16)
         .textAlign(TextAlign.Center)
         .border({radius: 10})
         .backgroundColor('#aaa')
-        .width(100)
-        .height(50)
-        .align(Alignment.TopEnd)
+        .height(40)
+        .padding({left: 30, right: 30})
+        .margin({top: 15, right: 15})
     }
   }
 

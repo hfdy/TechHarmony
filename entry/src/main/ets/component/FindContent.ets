@@ -48,7 +48,7 @@ export struct FindContent {
         }
         .onClick(()=>{
         })
-      }, (index?:number) => `${index}`)
+      }, (index:number) => `${index}`)
     }
     .width('100%')
     .height('100%')
@@ -60,13 +60,13 @@ export struct FindContent {
   @Builder
   TagContent(){
     List({ space: 10 }) {
-      ForEach(this.innerListData, (item) => {
+      ForEach(this.innerListData, (item: string) => {
         ListItem() {
           Text(item)
             .fontSize(14)
             .fontColor("#f5f5f5")
         }
-      }, item => item)
+      }, (index:number) => `${index}`)
     }
     .alignListItem(ListItemAlign.Start)
     .margin({ top: 10 })
