@@ -28,15 +28,17 @@ export struct CategoriesContent {
 
   build(){
     Row(){
-      List({space: 5}) {
+      List({space: 3}) {
         ForEach(this.leftListData, (item: string, index: number) => {
           ListItem() {
             Text(item)
               .width(100)
               .height(50)
-              .fontSize(18)
+              .fontSize(14)
+              .fontColor('#222427')
               .textAlign(TextAlign.Center)
-              .backgroundColor(this.currentIndex === index?"#fff":"#aaa")
+              .backgroundColor(this.currentIndex === index?"#fff":"#f0f2f4")
+              .borderRadius({topRight: this.currentIndex + 1 === index? 5 : 0, bottomRight: this.currentIndex - 1 === index? 5 : 0})
           }
           .onClick(()=>{
             this.currentIndex = index;
@@ -53,17 +55,21 @@ export struct CategoriesContent {
           GridItem() {
             Text(item)
               .width('100%')
-              .height(80)
-              .fontSize(18)
-              .backgroundColor("#0159a5")
+              .height(60)
+              .fontSize(12)
+              .fontColor("#4F5356")
+              .backgroundColor("#b2d0e9")
               .border({radius: 10})
+              .textAlign(TextAlign.Center)
           }
         }, (index?:number) => `${index}`)
       }
       .columnsTemplate('1fr 1fr')
-      .layoutDirection(GridDirection.Row)
+      .layoutDirection(GridDirection.Column)
       .rowsGap(10)
       .columnsGap(10)
+      .layoutWeight(1)
+      .margin({ left: 10, right: 10})
     }
     .width('100%')
     .height('100%')
