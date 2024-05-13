@@ -25,17 +25,18 @@ export struct FindContent {
   ];
 
   build(){
-    List({space: 5}) {
+    List({space: 15}) {
       ForEach(this.listData, (item: string, index: number) => {
         ListItem() {
           Row(){
             Column(){
               Text(item)
-                .fontColor("#000")
-                .fontSize(16)
-                .fontWeight(300)
+                .fontColor("#222427")
+                .fontSize(15)
+                .fontWeight(500)
               this.TagContent()
             }
+            .alignItems(HorizontalAlign.Start)
             .layoutWeight(1)
             Image($r('app.media.ic_next'))
               .width(18)
@@ -44,7 +45,8 @@ export struct FindContent {
               .margin({left: 15, right: 10})
           }
           .backgroundColor("#fff")
-          .border({ radius: 5 })
+          .border({ radius: 10 })
+          .padding({top: 10, bottom: 10, left: 10})
         }
         .onClick(()=>{
         })
@@ -52,23 +54,20 @@ export struct FindContent {
     }
     .width('100%')
     .height('100%')
-    .margin({left: 15, right: 15})
-    .backgroundColor('#aaa')
+    .padding({left: 15, right: 15, top: 15})
+    .backgroundColor('#f0f2f4')
     .alignListItem(ListItemAlign.Center)
   }
 
   @Builder
   TagContent(){
-    List({ space: 10 }) {
+    Flex({direction: FlexDirection.Row, wrap: FlexWrap.Wrap}) {
       ForEach(this.innerListData, (item: string) => {
-        ListItem() {
           Text(item)
-            .fontSize(14)
-            .fontColor("#f5f5f5")
-        }
+            .fontSize(13)
+            .fontColor("#898e92")
+            .margin({top: 10, right: 10})
       }, (index:number) => `${index}`)
     }
-    .alignListItem(ListItemAlign.Start)
-    .margin({ top: 10 })
   }
 }
