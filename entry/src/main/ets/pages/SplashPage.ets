@@ -34,6 +34,10 @@ struct SplashPage {
         .height(40)
         .padding({left: 30, right: 30})
         .margin({top: 15, right: 15})
+        .onClick(()=>{
+          clearInterval(this.intervalID);
+          router.pushUrl({url: RoutePath.MAIN_PAGE});
+        })
     }
   }
 

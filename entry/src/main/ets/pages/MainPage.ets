@@ -34,7 +34,6 @@ struct MainPage {
   ];
 
   aboutToAppear() {
-
   }
 
   @Builder
@@ -43,11 +42,11 @@ struct MainPage {
       Image(this.currentIndex === index ? this.tabSelectArray[index] : this.tabNormalArray[index])
         .width(20)
         .height(20)
-        .margin({ top: 5 })
       Text(this.tabsArray[index])
         .fontColor(this.currentIndex === index ? this.selectedFontColor : this.fontColor)
         .fontSize(16)
         .fontWeight(this.currentIndex === index ? 500 : 400)
+        .margin({ top: 6 })
     }
     .width('100%')
     .align(Alignment.Center)
@@ -74,12 +73,12 @@ struct MainPage {
     .vertical(false)
     .barMode(BarMode.Fixed)
     .barWidth('100%')
-    .barHeight(56)
+    .barHeight(60)
     .onChange((index: number) => {
       this.currentIndex = index;
     })
     .width('100%')
     .height('100%')
-    .backgroundColor('#F1F3F5')
+    .backgroundColor(Color.White)
   }
 }

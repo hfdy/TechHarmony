@@ -7,7 +7,8 @@ export struct HomeContent {
   @State selectedFontColor: string = '#0159a5'
   @State currentIndex: number = 0
   private swiperController: SwiperController = new SwiperController();
-  private controller: TabsController = new TabsController()
+  private scrollerForScroll: Scroller = new Scroller();
+  private scrollerForList: Scroller = new Scroller();
 
   private bannerData: Array<Resource> = [
     $r('app.media.ic_navi_home'),
@@ -37,24 +38,15 @@ export struct HomeContent {
   ];
 
   build(){
-    Scroll(){
+    Scroll(this.scrollerForScroll){
       Column(){
         this.TopBanner()
-        List({space: 10}){
-          ListItemGroup({ header: this.MiddleTab() }) {
-            ForEach(this.listData, (item: string, index: number) => {
-              ListItem() {
-                Text(item)
-              }
-            }, (index?:number) => `${index}`)
-          }
-        }
-        .sticky(StickyStyle.Header)  // 设置吸顶，实现粘性标题效果
-        .width('100%')
-        .height('100%')
-        .layoutWeight(1)
+        this.MiddleTab()
       }
     }
+    .scrollBar(BarState.Off)
+    .width('100%')
+    .height('100%')
   }
 
   /**
@@ -70,14 +62,19 @@ export struct HomeContent {
       }, (index?: number) => `${index}`)
     }
     .width('100%')
-    .height(150)
+    .height(160)
     .loop(true)
     .autoPlay(true)
     .interval(2000)
-    .indicatorStyle({
-      size: 20,
-      color: '#0159a5'
-    })
+    .indicator(
+      Indicator.dot()
+      .itemWidth(8)
+      .itemHeight(8)
+      .selectedItemWidth(13)
+      .selectedItemHeight(8)
+      .color($r('app.color.color_aaa'))
+      .selectedColor($r('app.color.color_0159a5'))
+    )
   }
 
   /**
@@ -85,9 +82,25 @@ export struct HomeContent {
    */
   @Builder
   MiddleTab() {
-    Tabs({ barPosition: BarPosition.Start, controller: this.controller }) {
+    Tabs({ barPosition: BarPosition.Start }) {
       ForEach(this.tabData, (item: string, index: number) => {
         TabContent() {
+          List({scroller: this.scrollerForList}){
+            ForEach(this.listData, (item: string, index: number) => {
+              ListItem() {
+                Text(item)
+                  .height(150)
+              }
+            }, (index?:number) => `${index}`)
+          }
+          .width('100%')
+          .height('100%')
+          .edgeEffect(EdgeEffect.None)
+          .scrollBar(BarState.Off)
+          .nestedScroll({
+            scrollForward: NestedScrollMode.PARENT_FIRST,
+            scrollBackward: NestedScrollMode.SELF_FIRST
+          })
         }
         .tabBar(this.TabBuilder(index))
       }, (item: string) => item)
@@ -95,12 +108,13 @@ export struct HomeContent {
     .vertical(false)
     .barMode(BarMode.Scrollable)
     .animationDuration(400)
+    .width('100%')
+    .height('100%')
+    .backgroundColor(Color.White)
+    .padding({left: 10, right: 10})
     .onChange((index: number) => {
       this.currentIndex = index
     })
-    .width('100%')
-    .height(56)
-    .backgroundColor('#F1F3F5')
   }
 
   @Builder
@@ -110,12 +124,14 @@ export struct HomeContent {
         .fontColor(this.currentIndex === index ? this.selectedFontColor : this.fontColor)
         .fontSize(16)
         .fontWeight(this.currentIndex === index ? 500 : 400)
-        .lineHeight(22)
-        .margin({ top: 17, bottom: 7 })
-      Divider()
-        .strokeWidth(2)
-        .color('#007DFF')
+        .margin({ top: 18, bottom: 8 })
+      Line()
+        .width(20)
+        .height(5)
+        .borderRadius(5)
+        .backgroundColor($r('app.color.color_0159a5'))
         .opacity(this.currentIndex === index ? 1 : 0)
-    }.width('100%')
+    }
+    .margin({right: 15})
   }
 }
