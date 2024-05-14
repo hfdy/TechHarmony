@@ -14,8 +14,35 @@ export default class EntryAbility extends UIAbility {
   }
 
   onWindowStageCreate(windowStage: window.WindowStage) {
-    // Main window is created, set main page for this ability
-    hilog.info(0x0000, 'testTag', '%{public}s', 'Ability onWindowStageCreate');
+    // 1.获取应用主窗口。
+    let windowClass: window.Window;
+    windowStage.getMainWindow((err, data: window.Window) => {
+      if (err.code) {
+        return;
+      }
+      windowClass = data;
+      // 2.实现沉浸式效果：设置导航栏、状态栏不显示。
+      let names: Array<'status' | 'navigation'> = ["status"];
+      windowClass.setWindowSystemBarEnable(names, (err) => {
+        if (err.code) {
+          return;
+        }
+      });
+      windowClass.setWindowLayoutFullScreen(true);
+
+      //3、设置系统状态栏颜色---该API废弃了，统一返回801，目前没找到好的方法设置状态栏文字的颜色，放弃了。。。。。。
+      const systemBarProperties: window.SystemBarProperties = {
+        //顶部状态栏颜色
+        statusBarColor: "#00ffffff",
+        statusBarContentColor: "#ffffff",
+        isStatusBarLightIcon: true
+      }
+      windowClass.setWindowSystemBarProperties(systemBarProperties, (err, result) => {
+        if (err.code == 0) {
+        } else {
+        }
+      })
+    });
 
     windowStage.loadContent('pages/SplashPage', (err, data) => {
       if (err.code) {
