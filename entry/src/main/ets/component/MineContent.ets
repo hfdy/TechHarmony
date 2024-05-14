@@ -3,6 +3,18 @@
  */
 @Component
 export struct MineContent {
+  private rightListData: Array<string> = [
+    "google开发者",
+    "Github",
+    "掘金",
+    "CSDN",
+    "简书",
+    "开发者头条",
+    "leetcode",
+    "maven仓库"
+  ];
+
+
   build(){
     Stack({alignContent: Alignment.TopStart}){
       Image($r('app.media.bg_mine_head'))
@@ -21,6 +33,7 @@ export struct MineContent {
       Column(){
         this.TopHeader()
         this.TopVideo()
+        this.MiddleService()
       }
       .margin({top: 100})
     }
@@ -91,4 +104,37 @@ export struct MineContent {
     .padding(15)
   }
 
+  /**
+   * 我的服务
+   */
+  @Builder
+  MiddleService() {
+    Column(){
+      Text("我的服务")
+        .fontColor("#000")
+        .fontSize(16)
+        .fontWeight(FontWeight.Bold)
+      Line()
+        .width('100%')
+        .height(1)
+      Grid(){
+        ForEach(this.rightListData, (item: string, index: number) => {
+          GridItem() {
+            Text(item)
+              .height(60)
+              .fontSize(12)
+              .fontColor("#4F5356")
+              .textAlign(TextAlign.Center)
+          }
+        }, (index?:number) => `${index}`)
+      }
+      .rowsTemplate('1fr 1fr')
+      .columnsTemplate('1fr 1fr 1fr 1fr')
+      .layoutDirection(GridDirection.Column)
+    }
+    .alignItems(HorizontalAlign.Start)
+    .margin({top: 10, left: 15, right: 15})
+    .backgroundColor("#fff")
+    .borderRadius(10)
+  }
 }
