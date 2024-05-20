@@ -1,0 +1,10 @@
+{
+  "module": {
+    "name": "library_base",
+    "type": "har",
+    "deviceTypes": [
+      "phone",
+      "tablet"
+    ]
+  }
+}
