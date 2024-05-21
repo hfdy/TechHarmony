@@ -1,41 +1,34 @@
 /**
  * 首页
  */
+import { Banner, ProjectSubInfo, ProjectSubList, ProjectTabItem } from '../http/apiService';
+import { HomeViewModel } from '../viewmodel/HomeViewModel';
+
 @Component
 export struct HomeContent {
-  @State fontColor: string = '#182431'
-  @State selectedFontColor: string = '#0159a5'
-  @State currentIndex: number = 0
+  @State bannerData: Array<Banner> = [];
+  @State tabData: Array<ProjectTabItem> = [];
+  @State listData: Array<ProjectSubInfo> = [];
+  @State fontColor: string = '#182431';
+  @State selectedFontColor: string = '#0159a5';
+  @State currentIndex: number = 0;
+  private homeViewModel: HomeViewModel = new HomeViewModel();
   private swiperController: SwiperController = new SwiperController();
   private scrollerForScroll: Scroller = new Scroller();
-  private scrollerForList: Scroller = new Scroller();
+  private mPage: number = 1;
 
-  private bannerData: Array<Resource> = [
-    $r('app.media.ic_navi_home'),
-    $r('app.media.ic_navi_categories'),
-    $r('app.media.ic_navi_find'),
-    $r('app.media.ic_navi_mine'),
-  ];
-  private tabData: Array<string> = [
-    "短视频",
-    "完整项目",
-    "跨平台应用",
-    "资源聚合",
-    "短视频",
-    "完整项目",
-    "跨平台应用",
-    "资源聚合"
-  ];
-  private listData: Array<string> = [
-    "短视频",
-    "完整项目",
-    "跨平台应用",
-    "资源聚合",
-    "短视频",
-    "完整项目",
-    "跨平台应用",
-    "资源聚合"
-  ];
+  aboutToAppear(): void {
+    this.homeViewModel.getHomeBanner((data)=>{
+      this.bannerData = data as Array<Banner>;
+    });
+    this.homeViewModel.getProjectTab((data)=>{
+      this.tabData = data as Array<ProjectTabItem>;
+      this.homeViewModel.getProjectList(this.mPage, this.tabData[this.currentIndex].id, (result)=> {
+        let tempResult = result as ProjectSubList;
+        this.listData = tempResult.datas;
+      });
+    });
+  }
 
   build(){
     Scroll(this.scrollerForScroll){
@@ -55,10 +48,11 @@ export struct HomeContent {
   @Builder
   TopBanner() {
     Swiper(this.swiperController) {
-      ForEach(this.bannerData, (item: Resource, index: number) => {
-        Image(item)
+      ForEach(this.bannerData, (item: Banner, index: number) => {
+        Image(item.imagePath)
           .width('100%')
           .height('100%')
+          .alt($r('app.media.default_img'))
       }, (index?: number) => `${index}`)
     }
     .width('100%')
@@ -83,18 +77,57 @@ export struct HomeContent {
   @Builder
   MiddleTab() {
     Tabs({ barPosition: BarPosition.Start }) {
-      ForEach(this.tabData, (item: string, index: number) => {
+      ForEach(this.tabData, (item: ProjectTabItem, index: number) => {
         TabContent() {
-          List({scroller: this.scrollerForList}){
-            ForEach(this.listData, (item: string, index: number) => {
-              ListItem() {
-                Text(item)
-                  .height(150)
+          Grid(){
+            ForEach(this.listData, (info: ProjectSubInfo, index: number) => {
+              GridItem() {
+                Column(){
+                  Image(info.envelopePic)
+                    .width('100%')
+                    .height(200)
+                    .alt($r('app.media.default_img'))
+                  Text(info.title)
+                    .fontSize(13)
+                    .fontColor(Color.Black)
+                    .maxLines(2)
+                    .ellipsisMode(EllipsisMode.END)
+                    .margin({top: 8})
+                    .fontWeight(FontWeight.Bold)
+                  Text(info.desc)
+                    .fontSize(11)
+                    .fontColor('#898e92')
+                    .maxLines(1)
+                    .ellipsisMode(EllipsisMode.END)
+                    .margin({top: 2})
+                  Row(){
+                    Text(info.author)
+                      .fontSize(9)
+                      .fontColor('#898e92')
+                      .maxLines(1)
+                      .ellipsisMode(EllipsisMode.END)
+                    Text(info.niceDate)
+                      .fontSize(9)
+                      .fontColor('#898e92')
+                      .maxLines(1)
+                      .ellipsisMode(EllipsisMode.END)
+                  }
+                  .justifyContent(FlexAlign.SpaceBetween)
+                  .alignItems(VerticalAlign.Center)
+                  .margin({top: 2})
+                }
+                .backgroundColor(Color.White)
+                .borderRadius(5)
               }
             }, (index?:number) => `${index}`)
           }
           .width('100%')
           .height('100%')
+          .columnsTemplate('1fr 1fr')
+          .layoutDirection(GridDirection.Column)
+          .rowsGap(10)
+          .columnsGap(10)
+          .margin({ left: 10, right: 10})
           .edgeEffect(EdgeEffect.None)
           .scrollBar(BarState.Off)
           .nestedScroll({
@@ -120,7 +153,7 @@ export struct HomeContent {
   @Builder
   TabBuilder(index: number) {
     Column() {
-      Text(this.tabData[index])
+      Text(this.tabData[index].name)
         .fontColor(this.currentIndex === index ? this.selectedFontColor : this.fontColor)
         .fontSize(16)
         .fontWeight(this.currentIndex === index ? 500 : 400)

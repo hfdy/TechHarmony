@@ -15,8 +15,8 @@ import { BusinessError } from '@ohos.base';
  */
 export interface BaseResponse {
   //响应体
-  code: string
-  message: string
+  errorCode: number
+  errorMsg: string
   //拓展xxx-API响应体
 }
 
@@ -25,7 +25,7 @@ export interface BaseResponse {
  */
 export interface ApiResponse<T = object> extends BaseResponse {
   //wanAndroid-API响应体
-  object: T | object;
+  data: T | object;
   //拓展xxx-API响应体
 }
 

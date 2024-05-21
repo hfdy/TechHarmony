@@ -23,8 +23,8 @@ function run<T>(requestPromise: Promise<T>, showLoadingState?: boolean, checkRes
     requestPromise.then((res) => {
       if (checkResult) {
         const result: ApiResponse = res as ApiResponse;
-        const resultData: object = result.object;
-        if (result.code !== "000000") {
+        const resultData: object = result.data;
+        if (result.errorCode !== 0) {
           updateViewState(ViewStateConstant.VIEW_STATE_ERROR, stateCallback)
         } else if (Array.isArray(resultData) && resultData.length === 0) {
           updateViewState(ViewStateConstant.VIEW_STATE_EMPTY)

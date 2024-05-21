@@ -46,7 +46,7 @@ export { WindowHelper } from './src/main/ets/bean/WindowHelper';
 export { HeaderStyleConfig, Action, initHeaderStyleConfig } from './src/main/ets/constants/HeaderStyleConfig';
 export { StorageKeys } from './src/main/ets/constants/StorageKeys';
 export { EKeyType, EKeyboardType, IKeyAttribute, lowerCaseKeyData, numericKeyData, specialKeyData, upperCaseKeyData, randomData } from './src/main/ets/constants/KeyboardConstants';
-export { HTTPS_DOMAIN, HTTP_DOMAIN, API_DOMAIN, APPS_DOMAIN, PROTOCOL_FILE, H5_ZIP_FOLD, RAW_ZIP_FILE, MAIN_PATH, APP_ID } from './src/main/ets/constants/ResourceFilePathConfig';
+export { API_DOMAIN } from './src/main/ets/constants/ResourceFilePathConfig';
 export { HeaderStyleDefault, PERCENTAGE_100, VisiableState, AppFontSize, AppFontWeight } from './src/main/ets/constants/Style';
 export { ViewStateConstant } from './src/main/ets/constants/ViewStateConstant';
 
