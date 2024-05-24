@@ -1,6 +1,7 @@
 /**
  * 首页
  */
+import { WindowHelper } from 'library_base';
 import { Banner, ProjectSubInfo, ProjectSubList, ProjectTabItem } from '../http/apiService';
 import { HomeViewModel } from '../viewmodel/HomeViewModel';
 
@@ -45,6 +46,7 @@ export struct HomeContent {
     .scrollBar(BarState.Off)
     .width('100%')
     .height('100%')
+    .margin({top: WindowHelper.statusBarHeight})
   }
 
   /**
