@@ -23,10 +23,15 @@ export struct HomeContent {
     });
     this.homeViewModel.getProjectTab((data)=>{
       this.tabData = data as Array<ProjectTabItem>;
-      this.homeViewModel.getProjectList(this.mPage, this.tabData[this.currentIndex].id, (result)=> {
-        let tempResult = result as ProjectSubList;
-        this.listData = tempResult.datas;
-      });
+      this.reqProjectList();
+    });
+  }
+
+  reqProjectList() {
+    this.mPage = 1;
+    this.homeViewModel.getProjectList(this.mPage, this.tabData[this.currentIndex].id, (result)=> {
+      let tempResult = result as ProjectSubList;
+      this.listData = tempResult.datas;
     });
   }
 
@@ -87,47 +92,55 @@ export struct HomeContent {
                     .width('100%')
                     .height(200)
                     .alt($r('app.media.default_img'))
+                    .borderRadius(10)
                   Text(info.title)
                     .fontSize(13)
                     .fontColor(Color.Black)
-                    .maxLines(2)
+                    .maxLines(1)
                     .ellipsisMode(EllipsisMode.END)
-                    .margin({top: 8})
+                    .margin({top: 8, left: 5, right: 5})
                     .fontWeight(FontWeight.Bold)
                   Text(info.desc)
                     .fontSize(11)
                     .fontColor('#898e92')
                     .maxLines(1)
                     .ellipsisMode(EllipsisMode.END)
-                    .margin({top: 2})
+                    .margin({top: 2, left: 5, right: 5})
                   Row(){
                     Text(info.author)
                       .fontSize(9)
                       .fontColor('#898e92')
                       .maxLines(1)
                       .ellipsisMode(EllipsisMode.END)
+                      .margin({left: 5})
                     Text(info.niceDate)
                       .fontSize(9)
                       .fontColor('#898e92')
                       .maxLines(1)
                       .ellipsisMode(EllipsisMode.END)
+                      .margin({right: 5})
                   }
+                  .width('100%')
                   .justifyContent(FlexAlign.SpaceBetween)
                   .alignItems(VerticalAlign.Center)
-                  .margin({top: 2})
+                  .margin({top: 2, bottom: 10})
                 }
+                .width('100%')
+                .alignItems(HorizontalAlign.Start)
                 .backgroundColor(Color.White)
-                .borderRadius(5)
+                .borderRadius(10)
+                .margin({top: 6})
               }
             }, (index?:number) => `${index}`)
           }
           .width('100%')
           .height('100%')
-          .columnsTemplate('1fr 1fr')
-          .layoutDirection(GridDirection.Column)
+          .backgroundColor("#f0f2f4")
+          .padding({left: 10, right: 10})
           .rowsGap(10)
           .columnsGap(10)
-          .margin({ left: 10, right: 10})
+          .columnsTemplate('1fr 1fr')
+          .layoutDirection(GridDirection.Column)
           .edgeEffect(EdgeEffect.None)
           .scrollBar(BarState.Off)
           .nestedScroll({
@@ -144,9 +157,9 @@ export struct HomeContent {
     .width('100%')
     .height('100%')
     .backgroundColor(Color.White)
-    .padding({left: 10, right: 10})
     .onChange((index: number) => {
-      this.currentIndex = index
+      this.currentIndex = index;
+      this.reqProjectList();
     })
   }
 
