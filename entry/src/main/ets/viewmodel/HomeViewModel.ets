@@ -39,7 +39,7 @@ export class HomeViewModel extends BaseViewModel{
    */
   async getProjectList(page: number, cid: number, resultCallback?: ResultCallback) {
     await this.httpRequest()
-      .promise(getProjectList(page, cid), false)
+      .promise(getProjectList(page, cid), true)
       .then(async result => {
         Logger.info("列表结果："+JSON.stringify(result));
         if (result.errorCode == 0) {
