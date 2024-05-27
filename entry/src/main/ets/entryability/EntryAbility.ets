@@ -39,18 +39,18 @@ export default class EntryAbility extends UIAbility {
         isStatusBarLightIcon: true
       }
       windowClass.setWindowSystemBarProperties(systemBarProperties);
-      //获取状态栏和导航栏的高度
-      let avoidArea: window.AvoidArea = windowClass.getWindowAvoidArea(window.AvoidAreaType.TYPE_SYSTEM)
-      let vpStatusBarHeight: number = px2vp(avoidArea.topRect.height)/3
-      let vpNavigationBarHeight: number = px2vp(avoidArea.bottomRect.height)
-
-      let targetSystemArea: SystemAreaBean = {
-        statusBarHeight: vpStatusBarHeight < 45 ? 45 :vpStatusBarHeight,
-        navigationBarHeight: vpNavigationBarHeight
-      }
-      Logger.info("-------状态栏高度："+vpStatusBarHeight);
-      // 保存到工具类中
-      WindowHelper.setSystemArea(targetSystemArea);
+      // //获取状态栏和导航栏的高度
+      // let avoidArea: window.AvoidArea = windowClass.getWindowAvoidArea(window.AvoidAreaType.TYPE_SYSTEM)
+      // let vpStatusBarHeight: number = px2vp(avoidArea.topRect.height)/3
+      // let vpNavigationBarHeight: number = px2vp(avoidArea.bottomRect.height)
+      //
+      // let targetSystemArea: SystemAreaBean = {
+      //   statusBarHeight: vpStatusBarHeight < 45 ? 45 :vpStatusBarHeight,
+      //   navigationBarHeight: vpNavigationBarHeight
+      // }
+      // Logger.info("-------状态栏高度："+vpStatusBarHeight);
+      // // 保存到工具类中
+      // WindowHelper.setSystemArea(targetSystemArea);
     });
 
     windowStage.loadContent('pages/SplashPage', (err, data) => {

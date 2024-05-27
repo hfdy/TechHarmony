@@ -64,3 +64,24 @@ export function getProjectList(page: number, cid: number) {
   });
 }
 
+export interface CategoryItem{
+  cid: number;
+  name: string;
+  isSelected: Boolean;
+  articles: Array<CategorySecondItem>;
+}
+
+export interface CategorySecondItem{
+  id: number;
+  link: string;
+  title: string;
+  chapterId: number;
+}
+
+export function getCategoryData() {
+  return axiosClient.get<ApiResponse<Array<CategoryItem>>>({
+    headers: {"Content-Type": "application/json"} as AxiosRequestHeaders,
+    url: API_DOMAIN + "navi/json",
+    showLoading: false,
+  })
+}
