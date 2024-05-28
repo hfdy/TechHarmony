@@ -1,40 +1,31 @@
 /**
  * 体系
  */
+import { SystemList, SystemSecondList } from '../http/apiService';
+import { FindContentViewModel } from '../viewmodel/FindContentViewModel';
+
 @Component
 export struct FindContent {
-  private listData: Array<string> = [
-    "常用网站",
-    "速查",
-    "查看源码",
-    "优秀的博客",
-    "个人博客",
-    "公司博客",
-    "Flutter",
-    "开发社区"
-  ];
-  private innerListData: Array<string> = [
-    "常用网站",
-    "速查",
-    "查看源码",
-    "优秀的博客",
-    "个人博客",
-    "公司博客",
-    "Flutter",
-    "开发社区"
-  ];
+  @State listData: Array<SystemList> = [];
+  private findViewModel: FindContentViewModel = new FindContentViewModel();
+
+  aboutToAppear(): void {
+    this.findViewModel.getSystemList((data)=>{
+      this.listData = data as Array<SystemList>;
+    });
+  }
 
   build(){
     List({space: 15}) {
-      ForEach(this.listData, (item: string, index: number) => {
+      ForEach(this.listData, (item: SystemList, index: number) => {
         ListItem() {
           Row(){
             Column(){
-              Text(item)
+              Text(item.name)
                 .fontColor("#222427")
                 .fontSize(15)
                 .fontWeight(500)
-              this.TagContent()
+              this.TagContent(item.children)
             }
             .alignItems(HorizontalAlign.Start)
             .layoutWeight(1)
@@ -60,10 +51,10 @@ export struct FindContent {
   }
 
   @Builder
-  TagContent(){
+  TagContent(innerListData: Array<SystemSecondList>){
     Flex({direction: FlexDirection.Row, wrap: FlexWrap.Wrap}) {
-      ForEach(this.innerListData, (item: string) => {
-          Text(item)
+      ForEach(innerListData, (item: SystemSecondList) => {
+          Text(item.name)
             .fontSize(13)
             .fontColor("#898e92")
             .margin({top: 10, right: 10})

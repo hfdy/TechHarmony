@@ -64,6 +64,9 @@ export function getProjectList(page: number, cid: number) {
   });
 }
 
+/**
+ * 分类列表
+ */
 export interface CategoryItem{
   cid: number;
   name: string;
@@ -85,3 +88,29 @@ export function getCategoryData() {
     showLoading: false,
   })
 }
+
+/**
+ * 发现列表
+ */
+export interface SystemList{
+  id: number;
+  courseId: number;
+  name: string;       //一级名称
+  children: Array<SystemSecondList>;
+  visible: number;
+}
+
+export interface SystemSecondList{
+  id: number;
+  name: string; // 二级名称
+  visible: number;
+}
+
+export function getSystemList() {
+  return axiosClient.get<ApiResponse<Array<SystemList>>>({
+    headers: {"Content-Type": "application/json"} as AxiosRequestHeaders,
+    url: API_DOMAIN + "tree/json",
+    showLoading: false,
+  })
+}
+
