@@ -4,6 +4,7 @@
 import { formateTime } from 'library_base/Index';
 import { ArticleInfo, ArticleList } from '../http/apiService';
 import { MineContentViewModel } from '../viewmodel/MineContentViewModel';
+import { window } from '@kit.ArkUI';
 
 interface KnowledgeData{
   content: string;
@@ -13,6 +14,7 @@ interface KnowledgeData{
 @Component
 export struct MineContent {
   @State list: Array<ArticleInfo> = [];
+  @StorageProp("MainWindow") mainWindow: window.Window | null = null;
   private scrollerForScroll: Scroller = new Scroller();
   private scrollerForList: Scroller = new Scroller();
   private viewModel: MineContentViewModel = new MineContentViewModel();
@@ -33,6 +35,16 @@ export struct MineContent {
     this.viewModel.getKnowledge(this.currentPage, this.pageSize, (data)=>{
       this.list = (data as ArticleList).datas;
     });
+  }
+
+  onPageShow(): void {
+    let names: Array<'status' | 'navigation'> = ['status'];
+    this.mainWindow?.setWindowSystemBarEnable(names, (err) => {
+      if (err.code) {
+        return;
+      }
+    });
+    this.mainWindow?.setWindowLayoutFullScreen(true);
   }
 
   build(){

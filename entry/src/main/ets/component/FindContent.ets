@@ -3,16 +3,23 @@
  */
 import { SystemList, SystemSecondList } from '../http/apiService';
 import { FindContentViewModel } from '../viewmodel/FindContentViewModel';
+import { window } from '@kit.ArkUI';
 
 @Component
 export struct FindContent {
   @State listData: Array<SystemList> = [];
+  @StorageProp("MainWindow") mainWindow: window.Window | null = null;
   private findViewModel: FindContentViewModel = new FindContentViewModel();
 
   aboutToAppear(): void {
     this.findViewModel.getSystemList((data)=>{
       this.listData = data as Array<SystemList>;
     });
+    this.mainWindow?.setWindowLayoutFullScreen(false);
+  }
+
+  onPageShow(): void {
+    this.mainWindow?.setWindowLayoutFullScreen(false);
   }
 
   build(){

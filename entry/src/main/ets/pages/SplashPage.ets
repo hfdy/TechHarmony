@@ -2,12 +2,17 @@
  * 启动页
  */
 import router from '@ohos.router';
+import { WindowHelper } from 'library_base/Index';
 import { RoutePath } from '../constants/RoutePath';
+import { window } from '@kit.ArkUI';
+
 @Entry
 @Component
 struct SplashPage {
   @State countDownTimer: number = 5;
+  @StorageProp("MainWindow") mainWindow: window.Window | null = null;
   intervalID: number = 0;
+  private statusBarHeight = WindowHelper.statusBarHeight;
 
   aboutToAppear() {
     this.intervalID = setInterval(()=>{
@@ -17,6 +22,13 @@ struct SplashPage {
         router.pushUrl({url: RoutePath.MAIN_PAGE});
       }
     }, 1000);
+    let names: Array<'status' | 'navigation'> = ['status'];
+    this.mainWindow?.setWindowSystemBarEnable(names, (err) => {
+      if (err.code) {
+        return;
+      }
+    });
+    this.mainWindow?.setWindowLayoutFullScreen(true);
   }
 
   build() {

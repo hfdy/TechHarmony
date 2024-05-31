@@ -1,8 +1,10 @@
 /**
  * 首页
  */
+import { GlobalThis, Logger, WindowHelper } from 'library_base/Index';
 import { Banner, ProjectSubInfo, ProjectSubList, ProjectTabItem } from '../http/apiService';
 import { HomeViewModel } from '../viewmodel/HomeViewModel';
+import { window } from '@kit.ArkUI';
 
 @Component
 export struct HomeContent {
@@ -12,10 +14,12 @@ export struct HomeContent {
   @State fontColor: string = '#182431';
   @State selectedFontColor: string = '#0159a5';
   @State currentIndex: number = 0;
+  @StorageProp("MainWindow") mainWindow: window.Window | null = null;
   private homeViewModel: HomeViewModel = new HomeViewModel();
   private swiperController: SwiperController = new SwiperController();
   private scrollerForScroll: Scroller = new Scroller();
   private mPage: number = 1;
+  private statusBarHeight = WindowHelper.statusBarHeight;
 
   aboutToAppear(): void {
     this.homeViewModel.getHomeBanner((data)=>{
@@ -25,6 +29,12 @@ export struct HomeContent {
       this.tabData = data as Array<ProjectTabItem>;
       this.reqProjectList();
     });
+    Logger.info("------首页状态栏高度："+this.statusBarHeight);
+    this.mainWindow?.setWindowLayoutFullScreen(false);
+  }
+
+  onPageShow(): void {
+    this.mainWindow?.setWindowLayoutFullScreen(false);
   }
 
   reqProjectList() {

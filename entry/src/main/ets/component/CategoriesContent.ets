@@ -3,17 +3,24 @@
  */
 import { CategoryItem, CategorySecondItem } from '../http/apiService';
 import { CategoriesContentViewModel } from '../viewmodel/CategoriesContentViewModel';
+import { window } from '@kit.ArkUI';
 
 @Component
 export struct CategoriesContent {
   @State currentIndex: number = 0;
   @State listData: Array<CategoryItem> = [];
+  @StorageProp("MainWindow") mainWindow: window.Window | null = null;
   private categoriesViewModel: CategoriesContentViewModel = new CategoriesContentViewModel();
 
   aboutToAppear(): void {
     this.categoriesViewModel.getCategoryData((data)=>{
       this.listData = data as Array<CategoryItem>;
     });
+    this.mainWindow?.setWindowLayoutFullScreen(false);
+  }
+
+  onPageShow(): void {
+    this.mainWindow?.setWindowLayoutFullScreen(false);
   }
 
   build(){
@@ -65,5 +72,6 @@ export struct CategoriesContent {
     }
     .width('100%')
     .height('100%')
+    .margin({top: 15})
   }
 }
