@@ -1,6 +1,10 @@
 /**
  * 我的
  */
+import { formateTime } from 'library_base/Index';
+import { ArticleInfo, ArticleList } from '../http/apiService';
+import { MineContentViewModel } from '../viewmodel/MineContentViewModel';
+
 interface KnowledgeData{
   content: string;
   img: Resource;
@@ -8,8 +12,12 @@ interface KnowledgeData{
 
 @Component
 export struct MineContent {
+  @State list: Array<ArticleInfo> = [];
   private scrollerForScroll: Scroller = new Scroller();
   private scrollerForList: Scroller = new Scroller();
+  private viewModel: MineContentViewModel = new MineContentViewModel();
+  private currentPage = 0;
+  private pageSize = 20;
   private knowledgeList: Array<KnowledgeData> = [
     { content: "Navigation", img: $r('app.media.mine_coupon_ico')},
     { content: "Lifecycle", img: $r('app.media.mine_comment_lab') },
@@ -20,16 +28,12 @@ export struct MineContent {
     { content: "Room", img: $r('app.media.mine_consign_earnings') },
     { content: "Hilt", img: $r('app.media.mine_sale_center') }
   ];
-  private list: Array<string> = [
-    "常用网站",
-    "速查",
-    "查看源码",
-    "优秀的博客",
-    "个人博客",
-    "公司博客",
-    "Flutter",
-    "开发社区"
-  ];
+
+  aboutToAppear(): void {
+    this.viewModel.getKnowledge(this.currentPage, this.pageSize, (data)=>{
+      this.list = (data as ArticleList).datas;
+    });
+  }
 
   build(){
     Stack({alignContent: Alignment.TopStart}){
@@ -183,14 +187,14 @@ export struct MineContent {
         .fontColor("#000")
         .fontWeight(FontWeight.Bold)
       List({space: 15, scroller: this.scrollerForList}){
-        ForEach(this.list, (item: string, index: number) => {
+        ForEach(this.list, (item: ArticleInfo, index: number) => {
           ListItem() {
             Column(){
               Row(){
-                Text("作者：Zeit")
+                Text(`作者：${item.author?item.author:item.shareUser}`)
                   .fontColor("#898e92")
                   .fontSize(12)
-                Text("2024-05-15 11:29")
+                Text(formateTime(item.publishTime))
                   .fontColor("#898e92")
                   .fontSize(12)
               }
@@ -199,12 +203,13 @@ export struct MineContent {
               .justifyContent(FlexAlign.SpaceBetween)
 
               Row(){
-                Text("普京总统访华")
+                Text(item.title)
                   .fontColor("#222427")
-                  .fontSize(12)
+                  .fontSize(14)
                   .maxLines(2)
                   .ellipsisMode(EllipsisMode.END)
                   .layoutWeight(1)
+                  .fontWeight(FontWeight.Bold)
                 Image($r('app.media.ic_collect_normal_new'))
                   .width(15)
                   .height(15)
@@ -213,15 +218,22 @@ export struct MineContent {
               .margin({top: 10})
 
               Row(){
-                Text("普京总统访哈尔滨")
+                Text(`${item.superChapterName}/${item.chapterName}`)
                   .fontColor("#898e92")
                   .fontSize(12)
-                  .maxLines(2)
+                  .maxLines(1)
                   .ellipsisMode(EllipsisMode.END)
                   .layoutWeight(1)
                 Image($r('app.media.ic_collect_selected'))
                   .width(15)
                   .height(15)
+                  .objectFit(ImageFit.Cover)
+                Text(item.zan?`${item.zan}`:'0')
+                  .fontColor("#898e92")
+                  .fontSize(12)
+                  .maxLines(1)
+                  .ellipsisMode(EllipsisMode.END)
+                  .margin({left: 5})
               }
               .alignItems(VerticalAlign.Center)
               .margin({top: 10})
@@ -235,6 +247,8 @@ export struct MineContent {
         }, (index:number) => `${index}`)
       }
       .margin({top: 15})
+      .width('100%')
+      .layoutWeight(1)
       .edgeEffect(EdgeEffect.None)
       .scrollBar(BarState.Off)
       .nestedScroll({

@@ -21,6 +21,7 @@ export { copyFromResource, unzipFile, createFile, deleteFile } from './src/main/
 export { GlobalThis } from './src/main/ets/utils/GlobalThis';
 export { ContactUtils } from './src/main/ets/utils/ContactUtils';
 export { default as SysPermissionUtils } from './src/main/ets/utils/SysPermissionUtils';
+export { formateTime } from './src/main/ets/utils/DateUtils';
 
 /**
  * event

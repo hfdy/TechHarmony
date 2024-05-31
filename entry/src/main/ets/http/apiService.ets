@@ -114,3 +114,43 @@ export function getSystemList() {
   })
 }
 
+/**
+ * 我的
+ */
+export interface ArticleList{
+  curPage: number;
+  offset: number;
+  size: number;
+  total: number;
+  pageCount: number;
+  datas: Array<ArticleInfo>;
+}
+
+export interface ArticleInfo{
+  id: number;
+  userId: number;
+  courseId: number;
+  originId: number;
+  collect: boolean;
+  title: string;
+  desc: string;
+  link: string;
+  zan: number;
+  niceShareDate: string;
+  niceDate: string;
+  publishTime: number;
+  shareUser: string;
+  author: string;
+  superChapterName: string;
+  chapterName: string;
+  tags: Array<object>;
+}
+
+export function getKnowledge(currentPage:number, pageSize: number) {
+  return axiosClient.get<ApiResponse<Array<ArticleList>>>({
+    headers: {"Content-Type": "application/json"} as AxiosRequestHeaders,
+    url: API_DOMAIN + `article/list/${currentPage}/json?page_size=${pageSize}`,
+    showLoading: false,
+  })
+}
+
