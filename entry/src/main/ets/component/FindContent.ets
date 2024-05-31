@@ -32,7 +32,7 @@ export struct FindContent {
                 .fontColor("#222427")
                 .fontSize(15)
                 .fontWeight(500)
-              this.TagContent(item.children)
+              this.TagContent(item.children);
             }
             .alignItems(HorizontalAlign.Start)
             .layoutWeight(1)
@@ -61,11 +61,12 @@ export struct FindContent {
   TagContent(innerListData: Array<SystemSecondList>){
     Flex({direction: FlexDirection.Row, wrap: FlexWrap.Wrap}) {
       ForEach(innerListData, (item: SystemSecondList) => {
-          Text(item.name)
-            .fontSize(13)
-            .fontColor("#898e92")
-            .margin({top: 10, right: 10})
-      }, (index:number) => `${index}`)
+        Text(item.name)
+          .fontSize(13)
+          .fontColor("#898e92")
+          .margin({top: 10, right: 10})
+      })
     }
+    .width("100%")
   }
 }

@@ -33,9 +33,6 @@ struct MainPage {
     "我的"
   ];
 
-  aboutToAppear() {
-  }
-
   @Builder
   TabBuilder(index: number) {
     Column() {
@@ -56,13 +53,13 @@ struct MainPage {
     Tabs({ barPosition: BarPosition.End, controller: this.controller }) {
       ForEach(this.tabsArray, (item: string, index: number) => {
         TabContent() {
-          if (this.currentIndex == 0) {
+          if (index == 0) {
             HomeContent()
-          } else if (this.currentIndex == 1){
+          } else if (index == 1){
             CategoriesContent()
-          } else if (this.currentIndex == 2) {
+          } else if (index == 2) {
             FindContent()
-          } else if (this.currentIndex == 3) {
+          } else if (index == 3) {
             MineContent()
           }
         }

@@ -103,7 +103,6 @@ export interface SystemList{
 export interface SystemSecondList{
   id: number;
   name: string; // 二级名称
-  visible: number;
 }
 
 export function getSystemList() {
