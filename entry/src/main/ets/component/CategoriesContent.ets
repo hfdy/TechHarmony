@@ -3,24 +3,23 @@
  */
 import { CategoryItem, CategorySecondItem } from '../http/apiService';
 import { CategoriesContentViewModel } from '../viewmodel/CategoriesContentViewModel';
-import { window } from '@kit.ArkUI';
+import { AppUtil } from '@pura/harmony-utils';
 
 @Component
 export struct CategoriesContent {
   @State currentIndex: number = 0;
   @State listData: Array<CategoryItem> = [];
-  @StorageProp("MainWindow") mainWindow: window.Window | null = null;
   private categoriesViewModel: CategoriesContentViewModel = new CategoriesContentViewModel();
 
   aboutToAppear(): void {
     this.categoriesViewModel.getCategoryData((data)=>{
       this.listData = data as Array<CategoryItem>;
     });
-    this.mainWindow?.setWindowLayoutFullScreen(false);
+    AppUtil.setStatusBar(false, true);
   }
 
   onPageShow(): void {
-    this.mainWindow?.setWindowLayoutFullScreen(false);
+    AppUtil.setStatusBar(false, true);
   }
 
   build(){

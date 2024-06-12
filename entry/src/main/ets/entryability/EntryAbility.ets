@@ -5,6 +5,7 @@ import Want from '@ohos.app.ability.Want';
 import window from '@ohos.window';
 import { GlobalThis, Logger, StorageUtils, SystemAreaBean, WindowHelper } from 'library_base';
 import { common } from '@kit.AbilityKit';
+import { AppUtil } from '@pura/harmony-utils';
 
 export default class EntryAbility extends UIAbility {
   onCreate(want: Want, launchParam: AbilityConstant.LaunchParam) {
@@ -17,6 +18,7 @@ export default class EntryAbility extends UIAbility {
 
   onWindowStageCreate(windowStage: window.WindowStage) {
     let context: common.UIAbilityContext = this.context;
+    AppUtil.init(this.context,windowStage);
     GlobalThis.getInstance().setContext("EntryAbility", context);
     StorageUtils.context = context;
     // 1.获取应用主窗口
@@ -26,8 +28,6 @@ export default class EntryAbility extends UIAbility {
         return;
       }
       windowClass = data;
-      AppStorage.setOrCreate('MainWindow', windowClass);
-
       //设置系统状态栏颜色
       const systemBarProperties: window.SystemBarProperties = {
         //顶部状态栏颜色

@@ -7,6 +7,8 @@
   "main": "",
   "version": "1.0.0",
   "dependencies": {
-    "library_base":"file:../library_base"
+    "library_base": "file:../library_base",
+    "@pura/harmony-utils": "^1.0.2",
+    "@ohos/pulltorefresh": "^2.0.5"
   }
 }

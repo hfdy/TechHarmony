@@ -1,10 +1,11 @@
 /**
  * 首页
  */
-import { GlobalThis, Logger, WindowHelper } from 'library_base/Index';
+import { PullToRefresh, PullToRefreshConfigurator } from '@ohos/pulltorefresh';
+import { AppUtil } from '@pura/harmony-utils';
+import { Logger, WindowHelper } from 'library_base/Index';
 import { Banner, ProjectSubInfo, ProjectSubList, ProjectTabItem } from '../http/apiService';
 import { HomeViewModel } from '../viewmodel/HomeViewModel';
-import { window } from '@kit.ArkUI';
 
 @Component
 export struct HomeContent {
@@ -14,38 +15,86 @@ export struct HomeContent {
   @State fontColor: string = '#182431';
   @State selectedFontColor: string = '#0159a5';
   @State currentIndex: number = 0;
-  @StorageProp("MainWindow") mainWindow: window.Window | null = null;
+  @State enableLoadMore: boolean = true;
   private homeViewModel: HomeViewModel = new HomeViewModel();
   private swiperController: SwiperController = new SwiperController();
   private scrollerForScroll: Scroller = new Scroller();
+  private scroller: Scroller = new Scroller();
+  private refreshConfigurator: PullToRefreshConfigurator = new PullToRefreshConfigurator();
   private mPage: number = 1;
+  private mPageSize: number = 15;
   private statusBarHeight = WindowHelper.statusBarHeight;
 
   aboutToAppear(): void {
+    this.refreshConfigurator
+      .setHasRefresh(true) // 是否具有下拉刷新功能
+      .setHasLoadMore(this.enableLoadMore); // 是否具有上拉加载功能
     this.homeViewModel.getHomeBanner((data)=>{
       this.bannerData = data as Array<Banner>;
     });
     this.homeViewModel.getProjectTab((data)=>{
       this.tabData = data as Array<ProjectTabItem>;
+      this.mPage = 1;
       this.reqProjectList();
     });
     Logger.info("------首页状态栏高度："+this.statusBarHeight);
-    this.mainWindow?.setWindowLayoutFullScreen(false);
+    AppUtil.setStatusBar(false, true);
   }
 
   onPageShow(): void {
-    this.mainWindow?.setWindowLayoutFullScreen(false);
+    AppUtil.setStatusBar(false, true);
   }
 
-  reqProjectList() {
-    this.mPage = 1;
+  reqProjectList(callBack?: ()=>void) {
     this.homeViewModel.getProjectList(this.mPage, this.tabData[this.currentIndex].id, (result)=> {
       let tempResult = result as ProjectSubList;
-      this.listData = tempResult.datas;
+      if (this.mPage == 1) {
+        this.listData = tempResult.datas;
+      } else {
+        this.listData = this.listData.concat(tempResult.datas);
+        this.enableLoadMore = tempResult.datas.length >= this.mPageSize;
+      }
+      this.mPage++;
+      callBack?.();
     });
   }
 
   build(){
+    PullToRefresh({
+      // 必传项，列表组件所绑定的数据
+      data: $listData,
+      // 必传项，需绑定传入主体布局内的列表或宫格组件
+      scroller: this.scroller,
+      refreshConfigurator: this.refreshConfigurator,
+      // 必传项，自定义主体布局，内部有列表或宫格组件
+      customList: () => {
+        // 一个用@Builder修饰过的UI方法
+        this.HomePage();
+      },
+      // 可选项，下拉刷新回调
+      onRefresh: () => {
+        return new Promise<string>((resolve, reject) => {
+          this.mPage = 1;
+          this.reqProjectList(()=>{
+            resolve('刷新成功');
+          });
+        });
+      },
+      // 可选项，上拉加载更多回调
+      onLoadMore: () => {
+        return new Promise<string>((resolve, reject) => {
+          this.reqProjectList(()=>{
+            resolve('加载成功');
+          });
+        });
+      },
+      customLoad: null,
+      customRefresh: null,
+    })
+  }
+
+  @Builder
+  HomePage() {
     Scroll(this.scrollerForScroll){
       Column(){
         this.TopBanner()
@@ -94,7 +143,7 @@ export struct HomeContent {
     Tabs({ barPosition: BarPosition.Start }) {
       ForEach(this.tabData, (item: ProjectTabItem, index: number) => {
         TabContent() {
-          Grid(){
+          Grid(this.scroller){
             ForEach(this.listData, (info: ProjectSubInfo, index: number) => {
               GridItem() {
                 Column(){
@@ -169,6 +218,7 @@ export struct HomeContent {
     .backgroundColor(Color.White)
     .onChange((index: number) => {
       this.currentIndex = index;
+      this.mPage = 1;
       this.reqProjectList();
     })
   }

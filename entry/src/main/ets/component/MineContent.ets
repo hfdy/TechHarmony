@@ -4,7 +4,7 @@
 import { formateTime } from 'library_base/Index';
 import { ArticleInfo, ArticleList } from '../http/apiService';
 import { MineContentViewModel } from '../viewmodel/MineContentViewModel';
-import { window } from '@kit.ArkUI';
+import { AppUtil } from '@pura/harmony-utils';
 
 interface KnowledgeData{
   content: string;
@@ -14,7 +14,6 @@ interface KnowledgeData{
 @Component
 export struct MineContent {
   @State list: Array<ArticleInfo> = [];
-  @StorageProp("MainWindow") mainWindow: window.Window | null = null;
   private scrollerForScroll: Scroller = new Scroller();
   private scrollerForList: Scroller = new Scroller();
   private viewModel: MineContentViewModel = new MineContentViewModel();
@@ -38,13 +37,7 @@ export struct MineContent {
   }
 
   onPageShow(): void {
-    let names: Array<'status' | 'navigation'> = ['status'];
-    this.mainWindow?.setWindowSystemBarEnable(names, (err) => {
-      if (err.code) {
-        return;
-      }
-    });
-    this.mainWindow?.setWindowLayoutFullScreen(true);
+    AppUtil.setStatusBar(true, false);
   }
 
   build(){
