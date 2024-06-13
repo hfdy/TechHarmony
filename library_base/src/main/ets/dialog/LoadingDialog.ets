@@ -4,7 +4,7 @@
 @CustomDialog
 @Component
 export struct LoadingDialog{
-  @Prop loadingTips: string;
+  @Prop loadingTips: string = "加载中..."
   @State rotateAngle: number = 0;
   private customDialogController: CustomDialogController;
   private timerId = setTimeout(() => {

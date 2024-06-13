@@ -4,16 +4,25 @@
 import { CategoryItem, CategorySecondItem } from '../http/apiService';
 import { CategoriesContentViewModel } from '../viewmodel/CategoriesContentViewModel';
 import { AppUtil } from '@pura/harmony-utils';
+import { LoadingDialog } from 'library_base/Index';
 
 @Component
 export struct CategoriesContent {
   @State currentIndex: number = 0;
   @State listData: Array<CategoryItem> = [];
   private categoriesViewModel: CategoriesContentViewModel = new CategoriesContentViewModel();
+  private customDialogController: CustomDialogController | null = new CustomDialogController({
+    builder: LoadingDialog(),
+    alignment: DialogAlignment.Center,
+    customStyle: true,
+    autoCancel: false,
+  });
 
   aboutToAppear(): void {
+    this.customDialogController?.open();
     this.categoriesViewModel.getCategoryData((data)=>{
       this.listData = data as Array<CategoryItem>;
+      this.customDialogController?.close();
     });
     AppUtil.setStatusBar(false, true);
   }

@@ -1,10 +1,11 @@
 /**
  * 我的
  */
-import { formateTime } from 'library_base/Index';
+import { formateTime, LoadingDialog } from 'library_base/Index';
 import { ArticleInfo, ArticleList } from '../http/apiService';
 import { MineContentViewModel } from '../viewmodel/MineContentViewModel';
 import { AppUtil } from '@pura/harmony-utils';
+import { PullToRefresh, PullToRefreshConfigurator } from '@ohos/pulltorefresh';
 
 interface KnowledgeData{
   content: string;
@@ -19,6 +20,8 @@ export struct MineContent {
   private viewModel: MineContentViewModel = new MineContentViewModel();
   private currentPage = 0;
   private pageSize = 20;
+  @State enableLoadMore: boolean = true;
+  private refreshConfigurator: PullToRefreshConfigurator = new PullToRefreshConfigurator();
   private knowledgeList: Array<KnowledgeData> = [
     { content: "Navigation", img: $r('app.media.mine_coupon_ico')},
     { content: "Lifecycle", img: $r('app.media.mine_comment_lab') },
@@ -29,10 +32,31 @@ export struct MineContent {
     { content: "Room", img: $r('app.media.mine_consign_earnings') },
     { content: "Hilt", img: $r('app.media.mine_sale_center') }
   ];
+  private customDialogController: CustomDialogController | null = new CustomDialogController({
+    builder: LoadingDialog(),
+    alignment: DialogAlignment.Center,
+    customStyle: true,
+    autoCancel: false,
+  });
 
   aboutToAppear(): void {
+    this.currentPage = 0;
+    this.reqKnowledgeList();
+  }
+
+  reqKnowledgeList(callBack?: ()=>void) {
+    this.customDialogController?.open();
     this.viewModel.getKnowledge(this.currentPage, this.pageSize, (data)=>{
-      this.list = (data as ArticleList).datas;
+      let tempResult = data as ArticleList;
+      if (this.currentPage == 0) {
+        this.list = tempResult.datas;
+      } else {
+        this.list = this.list.concat(tempResult.datas);
+        this.enableLoadMore = tempResult.datas.length >= this.pageSize;
+      }
+      this.currentPage++;
+      callBack?.();
+      this.customDialogController?.close();
     });
   }
 
@@ -41,6 +65,41 @@ export struct MineContent {
   }
 
   build(){
+    PullToRefresh({
+      // 必传项，列表组件所绑定的数据
+      data: $list,
+      // 必传项，需绑定传入主体布局内的列表或宫格组件
+      scroller: this.scrollerForList,
+      refreshConfigurator: this.refreshConfigurator,
+      // 必传项，自定义主体布局，内部有列表或宫格组件
+      customList: () => {
+        // 一个用@Builder修饰过的UI方法
+        this.MinePage();
+      },
+      // 可选项，下拉刷新回调
+      onRefresh: () => {
+        return new Promise<string>((resolve, reject) => {
+          this.currentPage = 0;
+          this.reqKnowledgeList(()=>{
+            resolve('刷新成功');
+          });
+        });
+      },
+      // 可选项，上拉加载更多回调
+      onLoadMore: () => {
+        return new Promise<string>((resolve, reject) => {
+          this.reqKnowledgeList(()=>{
+            resolve('加载成功');
+          });
+        });
+      },
+      customLoad: null,
+      customRefresh: null,
+    })
+  }
+
+  @Builder
+  MinePage() {
     Stack({alignContent: Alignment.TopStart}){
       Image($r('app.media.bg_mine_head'))
         .width('100%')

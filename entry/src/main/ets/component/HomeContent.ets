@@ -3,7 +3,7 @@
  */
 import { PullToRefresh, PullToRefreshConfigurator } from '@ohos/pulltorefresh';
 import { AppUtil } from '@pura/harmony-utils';
-import { Logger, WindowHelper } from 'library_base/Index';
+import { LoadingDialog, Logger, WindowHelper } from 'library_base/Index';
 import { Banner, ProjectSubInfo, ProjectSubList, ProjectTabItem } from '../http/apiService';
 import { HomeViewModel } from '../viewmodel/HomeViewModel';
 
@@ -24,6 +24,12 @@ export struct HomeContent {
   private mPage: number = 1;
   private mPageSize: number = 15;
   private statusBarHeight = WindowHelper.statusBarHeight;
+  private customDialogController: CustomDialogController | null = new CustomDialogController({
+    builder: LoadingDialog(),
+    alignment: DialogAlignment.Center,
+    customStyle: true,
+    autoCancel: false,
+  });
 
   aboutToAppear(): void {
     this.refreshConfigurator
@@ -46,6 +52,7 @@ export struct HomeContent {
   }
 
   reqProjectList(callBack?: ()=>void) {
+    this.customDialogController?.open();
     this.homeViewModel.getProjectList(this.mPage, this.tabData[this.currentIndex].id, (result)=> {
       let tempResult = result as ProjectSubList;
       if (this.mPage == 1) {
@@ -56,6 +63,7 @@ export struct HomeContent {
       }
       this.mPage++;
       callBack?.();
+      this.customDialogController?.close();
     });
   }
 

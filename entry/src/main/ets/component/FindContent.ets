@@ -4,15 +4,24 @@
 import { SystemList, SystemSecondList } from '../http/apiService';
 import { FindContentViewModel } from '../viewmodel/FindContentViewModel';
 import { AppUtil } from '@pura/harmony-utils';
+import { LoadingDialog } from 'library_base/Index';
 
 @Component
 export struct FindContent {
   @State listData: Array<SystemList> = [];
   private findViewModel: FindContentViewModel = new FindContentViewModel();
+  private customDialogController: CustomDialogController | null = new CustomDialogController({
+    builder: LoadingDialog(),
+    alignment: DialogAlignment.Center,
+    customStyle: true,
+    autoCancel: false,
+  });
 
   aboutToAppear(): void {
+    this.customDialogController?.open();
     this.findViewModel.getSystemList((data)=>{
       this.listData = data as Array<SystemList>;
+      this.customDialogController?.close();
     });
     AppUtil.setStatusBar(false, true);
   }
